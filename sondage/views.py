@@ -37,13 +37,18 @@ def resultats(request):
         nb_reponses = len(result_list)
         total_oui = 0
         total_non = 0
-        for r in result_list:
-            if r.points < 0:
-                total_non -= r.points
-            else:
-                total_oui += r.points
-        ratio_oui = total_oui/nb_reponses
-        ratio_non = total_non/nb_reponses
+        ratio_oui = 0
+        ratio_non = 0
+        ratio_sp = 0
+        if not nb_reponses==0:
+            for r in result_list:
+                if r.points < 0:
+                    total_non -= r.points
+                else:
+                    total_oui += r.points
+                ratio_oui = total_oui/nb_reponses
+                ratio_non = total_non/nb_reponses
+                ratio_sp = 100-ratio_oui-ratio_non
     return render(request, 'sondage/resultats.html', locals())
      
 def redir(request):
@@ -59,6 +64,7 @@ def control(request):
         elif request.POST.get('bouton') == "desactive":
             statutResultat.statut = "desactive"
         elif request.POST.get('bouton') == "RAZ":
+            Reponse.objects.all().delete()
             statutResultat.statut = "RAZ"
         statutResultat.save()
     return render(request, 'sondage/control.html', locals())
