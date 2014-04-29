@@ -7,34 +7,30 @@ from sondage.forms import ReponseForm
 
 from .models import Reponse, Statut
 
-vrai = False
-
 def index(request):
     statutResultat = Statut.objects.get(label="resultat").statut
-    
-    if request.method == 'POST':
+    if not (statutResultat=="active"):
+        deactive = True #on indique que c'est suspendu
+        form = ReponseForm() #et en plus on remet à zéro le formulaire
+        return render (request, 'sondage/wait.html')
+    elif request.method == 'POST':
         form = ReponseForm(request.POST)
-        if not (statutResultat=="active"):
-            deactive = True #on ne compte pas les points et on indique que c'est suspendu
-            form = ReponseForm() #et en plus on remet à zéro le formulaire
-        elif form.is_valid(): 
+        if form.is_valid(): #on compte les points
             points = form.cleaned_data['points'] 
             question_pas_claire = form.cleaned_data['question_pas_claire'] 
             ressources_insuffisantes = form.cleaned_data['ressources_insuffisantes']     
             form.save()
             return render (request, 'sondage/redir.html')
         else:
-            probleme = True
-    
+            probleme = True    
     else: # Si ce n'est pas du POST, c'est probablement une requête GET
-            form = ReponseForm() 
-            
+            form = ReponseForm()         
     return render(request, 'sondage/index.html', locals())
 
 def resultats(request):
     statut = Statut.objects.get(label="resultat").statut
     is_blank = False
-    if statut == "raz":
+    if statut == "RAZ":
         is_blank = True
     else:
         result_list = Reponse.objects.all()
@@ -55,9 +51,15 @@ def redir(request):
     return render(request, 'sondage/redir.html')
     
 def control(request):
-    
+    statutResultat = Statut.objects.get(label="resultat")
     if request.method == 'POST':
-        pass
-            
+        print (request.POST.get('bouton'))
+        if request.POST.get('bouton') == "active":
+            statutResultat.statut = "active"
+        elif request.POST.get('bouton') == "desactive":
+            statutResultat.statut = "desactive"
+        elif request.POST.get('bouton') == "RAZ":
+            statutResultat.statut = "RAZ"
+        statutResultat.save()
     return render(request, 'sondage/control.html', locals())
     

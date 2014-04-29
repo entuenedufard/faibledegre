@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.core.exceptions import ValidationError
-    
+
+
 def validate_points(value):
     if value < -100 or value > 100:
         raise ValidationError(u'%s est pas compris entre -100 et 100, benêt' % value)
@@ -19,8 +20,9 @@ class Statut(models.Model):
     """
     Alors ici c'est bien pourri mais on stocke le label 
     du statut (genre statut de l'affichage des résultat - actif, désactivé ou
-    remis à zéro) et le statut afférent, par exemple
-    active, desactivée ou RAZ
+    remis à zéro) et le statut afférent, par exemple activé, desactivé ou RAZ
     """
     label = models.CharField(max_length=200)
     statut = models.CharField(max_length=200)
+
+
