@@ -37,22 +37,31 @@ def resultats(request):
         nb_reponses = len(result_list)
         total_oui = 0
         total_non = 0
+        total_pas_clair = 0.0
+        total_manque_ressource = 0.0
         ratio_oui = 0
         ratio_non = 0
         ratio_sp = 0
+        ratio_pas_clair = 0.0
+        ratio_manque_ressource = 0.0
         if not nb_reponses==0:
             for r in result_list:
                 if r.points < 0:
                     total_non -= r.points
                 else:
                     total_oui += r.points
-                ratio_oui = total_oui/nb_reponses
-                ratio_non = total_non/nb_reponses
-                ratio_sp = 100-ratio_oui-ratio_non
+                if r.question_pas_claire:
+                    total_pas_clair += 1
+                if r.ressources_insuffisantes:
+                    total_manque_ressource += 1
+            ratio_oui = total_oui/nb_reponses
+            ratio_non = total_non/nb_reponses
+            ratio_sp = 100-ratio_oui-ratio_non
+            ratio_pas_clair = round(total_pas_clair/nb_reponses*100,2)
+            ratio_manque_ressource = round(total_manque_ressource/nb_reponses*100,2)
     return render(request, 'sondage/resultats.html', locals())
      
 def redir(request):
-    print ("salut on est dans redir et statut = " + statut) 
     return render(request, 'sondage/redir.html')
     
 def control(request):
