@@ -8,19 +8,29 @@
   </head>
   
   <body>
-    <h1>Alors bon</h1>	
-	{% if probleme %}Attendez ça a pas été bien répondu là{% endif %}
-	{% if deactive %}Les votes ont été suspendus pour l'instant{% endif %}
+    <h1>Alors bon :</h1>
+	{% if deactive %}	<div id='suspendus'> <h1>(Euh... les votes sont suspendus là en fait) </h1></div>
+	{% elif probleme %}<h1>Attendez ça a pas été bien répondu là</h1>
+	{% else %}
+	{% endif %}
 
 	<form action="{% url "sondage:index" %}" method="post">{% csrf_token %}
 		{{ form.as_p }}
 		<input type="submit" value="Envoyer" />
 	</form>
+	
+
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
     <script src="{% static 'sondage/js/bootstrap.min.js' %}"></script>    
 	<script src="{% static 'sondage/js/bootstrap-slider.js' %}"></script>
+    <script type="text/javascript">
+        $( '#suspendus' ).show(function(){
+              $(this).fadeOut(5000);
+        });
+    </script>
 	<script>
 			$('#id_points').slider({
 	          formater: function(value) {
