@@ -9,6 +9,7 @@ from .models import Reponse, Statut
 
 def index(request):
     statutResultat = Statut.objects.get(label="resultat").statut
+    deactive = False
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
         form = ReponseForm() #et en plus on remet à zéro le formulaire
@@ -20,7 +21,6 @@ def index(request):
             question_pas_claire = form.cleaned_data['question_pas_claire'] 
             ressources_insuffisantes = form.cleaned_data['ressources_insuffisantes']     
             form.save()
-            deactive = True
         else:
             probleme = True    
     else: # Si ce n'est pas du POST, c'est probablement une requête GET
