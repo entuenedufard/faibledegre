@@ -1,45 +1,16 @@
-{% load staticfiles %}
-<!DOCTYPE html>
+<!doctype html>
+<meta charset="UTF-8">
+<title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
 
-  <head>
-    <meta charset="utf-8">
-    <link href="{% static 'sondage/css/bootstrap.min.css' %}" rel="stylesheet">
-	<link href="{% static 'sondage/css/slider.css' %}" rel="stylesheet">
-  </head>
-  
-  <body>
-    <h1>Alors bon :</h1>
-	{% if deactive %}	<div id='suspendus'> <h1>(Euh... les votes sont suspendus là en fait) </h1></div>
-	{% elif probleme %}<h1>Attendez ça a pas été bien répondu là</h1>
-	{% endif %}
-
-	<form action="{% url "sondage:index" %}" method="post">{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="Envoyer" />
-	</form>
-	
-
-
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
-    <script src="{% static 'sondage/js/bootstrap.min.js' %}"></script>    
-	<script src="{% static 'sondage/js/bootstrap-slider.js' %}"></script>
-    <script type="text/javascript">
-        $( '#suspendus' ).show(function(){
-              $(this).fadeOut(5000);
-        });
-    </script>
-	<script>
-			$('#id_points').slider({
-	          formater: function(value) {
-	            return value;
-	          },
-			  min: -100,
-			  max: 100,
-			  value: 0,
-			  selection: 'none'
-	        });		
-	  </script>
-  </body>
-</html>
+VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ?
+<br/><br/>
+<form method="get" action="form/">
+   <p><input type="submit"class="boutons" name="choix"
+   value="UN"></p>
+<br/><br/>
+<p><input type="submit" class="boutons" name="choix"
+   value="DEUX"></p>
+<br/><br/>
+<p><input type="submit" class="boutons" name="choix"
+   value="TROIS"></p>
+</form>
