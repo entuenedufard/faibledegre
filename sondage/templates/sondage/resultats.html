@@ -3,19 +3,29 @@
 <head>
 <META HTTP-EQUIV="Refresh" CONTENT="1"; URL="/resultats.html">
     <meta charset="utf-8">
+	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
 	<link href="{% static 'sondage/css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
 {% if not is_blank %}	
-	
-bon ben ya {{nb_reponses}} reponses 
-</br>
-OUI : {{ratio_oui}}%
-NON : {{ratio_non}}%
-</br></br>
-SAIT PAS : {{ratio_sp}}%
-</br></br></br>
-LÉGITIMITÉ DE LA QUESTION : {{ratio_legitimite}}%
-
+<div id="wrapper">	
+	<div id="cons">
+		<span>NON <em>{{ratio_non}}%</em></span>
+	</div>
+	<div id="pros">
+		<span>OUI <em>{{ratio_oui}}%</em></span>
+	</div>
+	<div id="notsure">
+		<span>SAIT PAS  {{ratio_sp}}%</span>
+	</div>
+	<div id="bottom">
+		<div class="left">
+			{{nb_reponses}} VOTE(S)
+		</div> 
+		<div class="right">
+			LÉGITIMITÉ DE LA QUESTION : {{ratio_legitimite}}%
+		</div>
+	</div>
+</div>
 {% endif %}
 </body>

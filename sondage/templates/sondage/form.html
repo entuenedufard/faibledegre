@@ -1,0 +1,70 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+  <head>
+    <meta charset="utf-8">
+	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
+    <link href="{% static 'sondage/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'sondage/css/slider.css' %}" rel="stylesheet">
+	<link href="{% static 'sondage/css/styles.css' %}" rel="stylesheet">
+	 
+
+  </head>
+
+  <body>
+	{% if deactive %}	<div id='suspendus'> <h1>(Euh... les votes sont suspendus là en fait) </h1></div>
+	{% elif probleme %}<h1>Attendez ça a pas été bien répondu là</h1>
+	{% endif %}
+	<form class="std-form" action="/sondage/form/#" method="post">{% csrf_token %}
+		<div id="wrap-points">
+			<span id="label-left">NON</span>
+			{{form.points}}
+			<span id="label-right">OUI</span>
+		</div>
+		<div class="wrap-reserves">
+			<div id="wrap-question">
+				<label for="id_question_pas_claire">La question n'est pas suffisamment claire</label>
+				{{form.question_pas_claire}}
+			</div>
+			<div id="wrap-ressources">
+				<label for="id_ressources_insuffisantes">Il manque des données pour répondre</label>
+				{{form.ressources_insuffisantes}}
+			</div>
+		</div>
+		<input type="submit" value="Envoyer" />
+	</form>
+	
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
+    <script src="{% static 'sondage/js/bootstrap.min.js' %}"></script>    
+	<script src="{% static 'sondage/js/bootstrap-slider.js' %}"></script>
+    <script type="text/javascript">
+        $( '#suspendus' ).show(function(){
+              $(this).fadeOut(5000);
+        });
+    </script>
+	<script>
+			$('#id_points').slider({
+	          formater: function(value) {
+				  if (value <0) {
+				  	return("non à "+(-value) + "%");
+				}
+				else if (value >0){
+					return ("oui à "+value+"%");
+				}
+				else return ("on sait pas");
+	          },
+			  min: -100,
+			  max: 100,
+			  step: 10, 
+			  value: {{ouiNonSliderValue}},
+			  selection: 'none'
+	        }).on('slideStop', function(ev){
+    
+  });;		
+	  </script>
+  </body>
+</html>
