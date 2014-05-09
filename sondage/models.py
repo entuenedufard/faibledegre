@@ -16,6 +16,7 @@ class Reponse(models.Model):
     question_pas_claire = models.BooleanField()
     ressources_insuffisantes = models.BooleanField()
     adresse = models.IPAddressField(null=True, blank=True)
+    coef = models.IntegerField(default=1)
     
 class Statut(models.Model):
     """

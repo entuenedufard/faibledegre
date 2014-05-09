@@ -22,32 +22,34 @@ def index(request):
 def form(request, ouiNonSliderValue=50):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
-    
+    dataForm = {"points":50, "question_pas_claire":False, "ressources_insuffisantes":False, "coef":1}
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
-        form = ReponseForm() #et en plus on remet à zéro le formulaire
-        return render (request, 'sondage/form.html', locals())
-    elif request.method == 'POST':
+    if request.method == 'POST':
         remote_addr = request.META.get("HTTP_X_FORWARDED_FOR")
+        if "choixCoef" in request.POST: #ça veut dire qu'on arrive de l'accueil
+            if request.POST["choixCoef"]=="DEUX":
+                dataForm["coef"]=2
+        else: #si on vient du form lui-même
+            dataForm = request.POST
         try:
             instance = Reponse.objects.get(adresse=remote_addr)
-            form = ReponseForm(instance=instance, data=request.POST)
+            print ("la ça existait déjà et on met à jour avec")
+            print (dataForm)
+            form = ReponseForm(instance=instance, data=dataForm)
         except Reponse.DoesNotExist:
-            form = ReponseForm(request.POST)
-            
+            print ("et là ça existait pas et on crée avec")
+            print (dataForm)
+            form = ReponseForm(dataForm)           
         if form.is_valid(): #on compte les points
-            points = form.cleaned_data['points'] 
-            question_pas_claire = form.cleaned_data['question_pas_claire'] 
-            ressources_insuffisantes = form.cleaned_data['ressources_insuffisantes'] 
             instance = form.save(commit=False)
             instance.adresse = remote_addr
             instance.save()
             ouiNonSliderValue = instance.points
-            form = ReponseForm()  
         else:
             probleme = True    
     else: # Si ce n'est pas du POST, c'est probablement une requête GET
-            form = ReponseForm()       
+            form = ReponseForm(data=dataForm)       
     return render(request, 'sondage/form.html', locals())
 
 def resultats(request):
@@ -94,7 +96,11 @@ def control(request):
         elif request.POST.get('bouton') == "desactive":
             statutResultat.statut = "desactive"
         elif request.POST.get('bouton') == "RAZ":
-            Reponse.objects.all().delete()
+            for r in Reponse.objects.all():
+                r.points = 50;
+                r.question_pas_claire=False
+                r.ressources_insuffisantes=False
+                r.save()                
             statutResultat.statut = "RAZ"
         statutResultat.save()
     return render(request, 'sondage/control.html', locals())
