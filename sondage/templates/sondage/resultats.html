@@ -10,13 +10,13 @@
 {% if not is_blank %}	
 <div id="wrapper">	
 	<div id="cons">
-		<span>NON <em>{{ratio_non}}%</em></span>
+		<span>NON <em id="no-percent">{{ratio_non}}%</em></span>
 	</div>
 	<div id="pros">
-		<span>OUI <em>{{ratio_oui}}%</em></span>
+		<span>OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
 	</div>
 	<div id="notsure">
-		<span>SAIT PAS  {{ratio_sp}}%</span>
+		<span>SAIT PAS  <em id="sp-percent">{{ratio_sp}}%</em></span>
 	</div>
 	<div id="bottom">
 		<div class="left">
@@ -27,5 +27,14 @@
 		</div>
 	</div>
 </div>
+<script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
+    <script type="text/javascript">
+        $( window ).load(function(){
+              var nopercent = $('#no-percent').text();//.slice(0, -1);
+			  $('#cons').css("width", nopercent);
+              var yespercent = $('#yes-percent').text();//.slice(0, -1);
+			  $('#pros').css("width", yespercent);
+        });
+	</script>
 {% endif %}
 </body>

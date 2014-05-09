@@ -61,8 +61,8 @@ def resultats(request):
         result_list = Reponse.objects.all()
         nb_reponses = len(result_list)
         nb_suffrage_exprimes = 0
-        total_oui = 0
-        total_non = 0
+        total_oui = 0.0
+        total_non = 0.0
         total_sp = 0
         total_pas_legitime = 0.0
         ratio_oui = 0.0
@@ -78,8 +78,8 @@ def resultats(request):
                     total_non += 100-r.points
                     total_oui += r.points
                     #total_sp + = 50-(math.fabs(r.points-50))
-            ratio_oui = total_oui/nb_suffrage_exprimes
-            ratio_non = total_non/nb_suffrage_exprimes
+            ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
+            ratio_non = int(round(total_non/nb_suffrage_exprimes))
             ratio_sp = total_sp/nb_suffrage_exprimes
             ratio_legitimite= round(100-total_pas_legitime/nb_reponses*100)
     return render(request, 'sondage/resultats.html', locals())
