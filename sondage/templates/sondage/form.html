@@ -31,10 +31,10 @@
 			</div>
 			<div class="row" id="wrap-percent">
 				<div class="col-xs-6" id="wrap-percent-left">
-					<span id="percent-left" class="badge">50%</span>
+					<span id="percent-left" class="badge"></span>
 				</div>
 				<div class="col-xs-6" id="wrap-percent-right">
-					<span id="percent-right" class="badge">50%</span>
+					<span id="percent-right" class="badge"></span>
 				</div>
 			</div>
 			<div class="row">
@@ -81,6 +81,11 @@
         $( '#manque-ressource' ).change(function(){
               $("#vote-form").submit();
         });
+		$( window ).load(function() {
+			var pourcent = $('#id_points').attr('value');
+		 	 $('#percent-left').text((100-pourcent).toString()+"%");
+			 $('#percent-right').text(pourcent.toString()+"%");
+		});
     </script>
 	<script>
 			$('#id_points').slider({
