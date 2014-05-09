@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from sondage.views import SondageRedirectView
 
 from django.contrib import admin
 admin.autodiscover()
@@ -10,4 +11,5 @@ urlpatterns = patterns('',
     
     url(r'^sondage/', include('sondage.urls', namespace="sondage")),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', SondageRedirectView.as_view() )
 )

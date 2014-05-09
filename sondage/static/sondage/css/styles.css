@@ -120,22 +120,71 @@ body {
 /* FORM QUESTION */
 
 .std-form {
-	width:600px;
+	width:100%;
 	margin:0 auto;
 	padding-top:45px;
+	font-size:1rem;
 } 
 .std-form .slider {
-	width:500px !important;
+	width:100% !important;
+
+}
+
+.std-form #wrap-slider{
+	height:70px;
+	padding-left:30px;
+	padding-right:30px;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	margin-bottom:30px;
+}
+
+.std-form .slider-track, .slider{
+	height:50px !important;
+}
+
+.std-form .slider-handle {
+	height:50px !important;
+	width:50px !important;
+	margin-top:0 !important;
+	margin-left:-25px !important;
+}
+
+.std-form .slider-handle.round{
+	border-radius:30px !important;
 }
 
 .std-form #wrap-points {
 	margin-bottom:20px;
+	width:100%;
 }
 
 .std-form #label-left, .std-form #label-right {
 	display:inline-block;
-	width:46px;
-	text-align:center;
+	font-size:2rem;
+	padding-left:15px;
+	padding-right:15px;
+}
+
+.std-form #wrap-ouinon{
+	
+}
+
+.std-form #label-right, #percent-right{
+	float : right;
+}
+
+.std-form #percent-right, #percent-left{
+	font-size:1rem;
+}
+
+.std-form #wrap-percent-left{
+	padding-left:30px;
+}
+
+.std-form #wrap-percent-right{
+	padding-right:30px;
 }
 
 .std-form .wrap-reserves {
@@ -151,8 +200,12 @@ body {
 	font-weight:normal;
 }
 
-.std-form input[type='submit'] {
-	width: 150px;
+.badge{
+	background-color:#595959 !important;
+}
+
+/*.std-form input[type='submit'] {
+	width: 100%;
 	height: 40px;
 	border-radius: 20px;
 	background: #e4e4e4;
@@ -162,9 +215,9 @@ body {
 	font-size: 1rem;
 	display:block;
 	margin:30px auto 0;
-}
+}*/
 
-@media screen and (max-width: 599px) {
+/*@media screen and (max-width: 599px) {
 	.std-form {
 		width:100%;
 	}
@@ -176,4 +229,4 @@ body {
 	.std-form #label-left, .std-form #label-right {
 		width:12%;
 	}
-}
+}*/

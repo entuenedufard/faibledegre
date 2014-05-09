@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from math import fabs
+#from math import fabs
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.generic.base import RedirectView
+from django.core.urlresolvers import reverse
 
 from sondage.forms import ReponseForm
 
 from .models import Reponse, Statut
+
+class SondageRedirectView(RedirectView):
+    
+    def get_redirect_url(self, *arg, **kwargs):
+        return reverse("sondage:index")
 
 def index(request):
     return render(request, 'sondage/index.html')
@@ -46,9 +53,9 @@ def resultats(request):
         total_non = 0
         total_sp = 0
         total_pas_legitime = 0.0
-        ratio_oui = 0
-        ratio_non = 0
-        ratio_sp = 0
+        ratio_oui = 0.0
+        ratio_non = 0.0
+        ratio_sp = 0.0
         ratio_legitimite = 100
         if not nb_reponses==0:
             for r in result_list:
@@ -57,10 +64,8 @@ def resultats(request):
                 else :
                     nb_suffrage_exprimes += 1
                     total_non += 100-r.points
-                    #total_sp += 100 + r.points 
                     total_oui += r.points
                     #total_sp + = 50-(math.fabs(r.points-50))
-                    #total_sp += 100 - r.points
             ratio_oui = total_oui/nb_suffrage_exprimes
             ratio_non = total_non/nb_suffrage_exprimes
             ratio_sp = total_sp/nb_suffrage_exprimes
