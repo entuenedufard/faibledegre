@@ -10,7 +10,7 @@ from .models import Reponse, Statut
 def index(request):
     return render(request, 'sondage/index.html')
 
-def form(request, ouiNonSliderValue=0):
+def form(request, ouiNonSliderValue=5):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
     if not (statutResultat=="active"):

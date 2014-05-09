@@ -48,18 +48,12 @@
     </script>
 	<script>
 			$('#id_points').slider({
-	          formater: function(value) {
-				  if (value <0) {
-				  	return("non à "+(-value) + "%");
-				}
-				else if (value >0){
-					return ("oui à "+value+"%");
-				}
-				else return ("on sait pas");
-	          },
-			  min: -100,
-			  max: 100,
-			  step: 10, 
+	          formater: function(value) {		  
+				  return(((10-value)*10) + "% " + (value*10) + "%");
+			  },
+			  min: 0,
+			  max: 10,
+			  step: 1, 
 			  value: {{ouiNonSliderValue}},
 			  selection: 'none'
 	        }).on('slideStop', function(ev){
