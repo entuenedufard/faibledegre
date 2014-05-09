@@ -22,17 +22,27 @@ def index(request):
 def form(request, ouiNonSliderValue=50):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
+    
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
         form = ReponseForm() #et en plus on remet à zéro le formulaire
         return render (request, 'sondage/form.html', locals())
     elif request.method == 'POST':
-        form = ReponseForm(request.POST)
+        remote_addr = request.META.get("HTTP_X_FORWARDED_FOR")
+        try:
+            instance = Reponse.objects.get(adresse=remote_addr)
+            form = ReponseForm(instance=instance, data=request.POST)
+        except Reponse.DoesNotExist:
+            form = ReponseForm(request.POST)
+            
         if form.is_valid(): #on compte les points
             points = form.cleaned_data['points'] 
             question_pas_claire = form.cleaned_data['question_pas_claire'] 
             ressources_insuffisantes = form.cleaned_data['ressources_insuffisantes'] 
-            form.save()
+            instance = form.save(commit=False)
+            instance.adresse = remote_addr
+            instance.save()
+            ouiNonSliderValue = instance.points
             form = ReponseForm()  
         else:
             probleme = True    

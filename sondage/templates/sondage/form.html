@@ -19,7 +19,7 @@
 				{% endif %}
 			</div>
 		</div>
-		<form class="std-form" action="/sondage/form/#" method="post">{% csrf_token %}
+		<form id="vote-form" class="std-form" action="/sondage/form/#" method="post">{% csrf_token %}
 			<div class="row" id="wrap-ouinon">
 				<div class="col-xs-6">
 					<span id="label-left">NON</span>
@@ -85,6 +85,8 @@
 	        }).on('slide', function(ev){
 				$("#percent-left").text(100-ev.value+"%");
 				$("#percent-right").text(ev.value+"%");
+			}).on('slideStop', function(ev){
+				$("#vote-form").submit();
 			});;		
 	  </script>
   </body>

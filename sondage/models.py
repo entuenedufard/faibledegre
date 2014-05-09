@@ -15,6 +15,7 @@ class Reponse(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     question_pas_claire = models.BooleanField()
     ressources_insuffisantes = models.BooleanField()
+    adresse = models.IPAddressField(null=True, blank=True)
     
 class Statut(models.Model):
     """
