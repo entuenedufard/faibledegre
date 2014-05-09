@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from math import fabs
+
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -10,13 +12,13 @@ from .models import Reponse, Statut
 def index(request):
     return render(request, 'sondage/index.html')
 
-def form(request, ouiNonSliderValue=5):
+def form(request, ouiNonSliderValue=50):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
         form = ReponseForm() #et en plus on remet à zéro le formulaire
-        return render (request, 'sondage/index.html', locals())
+        return render (request, 'sondage/form.html', locals())
     elif request.method == 'POST':
         form = ReponseForm(request.POST)
         if form.is_valid(): #on compte les points
@@ -54,12 +56,11 @@ def resultats(request):
                     total_pas_legitime += 1
                 else :
                     nb_suffrage_exprimes += 1
-                    if r.points < 0:
-                        total_non += -r.points
-                        total_sp += 100 + r.points 
-                    else:
-                        total_oui += r.points
-                        total_sp += 100 - r.points
+                    total_non += 100-r.points
+                    #total_sp += 100 + r.points 
+                    total_oui += r.points
+                    #total_sp + = 50-(math.fabs(r.points-50))
+                    #total_sp += 100 - r.points
             ratio_oui = total_oui/nb_suffrage_exprimes
             ratio_non = total_non/nb_suffrage_exprimes
             ratio_sp = total_sp/nb_suffrage_exprimes

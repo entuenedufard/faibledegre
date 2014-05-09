@@ -12,9 +12,7 @@
   </head>
 
   <body>
-	{% if deactive %}	<div id='suspendus'> <h1>(Euh... les votes sont suspendus là en fait) </h1></div>
-	{% elif probleme %}<h1>Attendez ça a pas été bien répondu là</h1>
-	{% endif %}
+	
 	<form class="std-form" action="/sondage/form/#" method="post">{% csrf_token %}
 		<div id="wrap-points">
 			<span id="label-left">NON</span>
@@ -32,6 +30,9 @@
 			</div>
 		</div>
 		<input type="submit" value="Envoyer" />
+		{% if deactive %}	<div id='suspendus'> <h1>(Euh... les votes sont suspendus là en fait) </h1></div>
+		{% elif probleme %}<h1>Attendez ça a pas été bien répondu là</h1>
+		{% endif %}
 	</form>
 	
 
@@ -49,11 +50,11 @@
 	<script>
 			$('#id_points').slider({
 	          formater: function(value) {		  
-				  return(((10-value)*10) + "% " + (value*10) + "%");
+				  return(((100-value)) + "% " + (value) + "%");
 			  },
 			  min: 0,
-			  max: 10,
-			  step: 1, 
+			  max: 100,
+			  step: 10, 
 			  value: {{ouiNonSliderValue}},
 			  selection: 'none'
 	        }).on('slideStop', function(ev){
