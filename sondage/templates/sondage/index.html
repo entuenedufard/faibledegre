@@ -13,11 +13,11 @@
   <body>
 <title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
 
-VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ?
+<div id="howmuch-title"> VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ? </div>
 
 <form action="/sondage/form/" method="post"> {% csrf_token %}
-	<input type="submit" name="choixCoef" value="UN" class="btn btn-primary btn-lg"/>
-	<input type="submit" name="choixCoef" value="DEUX" class="btn btn-primary btn-lg"/> 
+	<input type="submit" name="choixCoef" value="UN" id="un-btn" class="btn btn-primary btn-lg"/>
+	<input type="submit" name="choixCoef" value="DEUX" id="deux-btn" class="btn btn-primary btn-lg"/> 
 </form>
 
 </body>
