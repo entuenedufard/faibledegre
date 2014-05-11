@@ -34,12 +34,8 @@ def form(request, ouiNonSliderValue=50):
             dataForm = request.POST
         try:
             instance = Reponse.objects.get(adresse=remote_addr)
-            print ("la ça existait déjà et on met à jour avec")
-            print (dataForm)
             form = ReponseForm(instance=instance, data=dataForm)
         except Reponse.DoesNotExist:
-            print ("et là ça existait pas et on crée avec")
-            print (dataForm)
             form = ReponseForm(dataForm)           
         if form.is_valid(): #on compte les points
             instance = form.save(commit=False)
@@ -63,7 +59,7 @@ def resultats(request):
         nb_suffrage_exprimes = 0
         total_oui = 0.0
         total_non = 0.0
-        total_sp = 0
+        total_sp = 0.0
         total_pas_legitime = 0.0
         ratio_oui = 0.0
         ratio_non = 0.0
@@ -78,10 +74,15 @@ def resultats(request):
                     total_non += 100-r.points
                     total_oui += r.points
                     #total_sp + = 50-(math.fabs(r.points-50))
-            ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
-            ratio_non = int(round(total_non/nb_suffrage_exprimes))
-            ratio_sp = total_sp/nb_suffrage_exprimes
+            ratio_oui = round(total_oui/nb_suffrage_exprimes)
+            ratio_non = round(total_non/nb_suffrage_exprimes)
+            ratio_sp = round(total_sp/nb_suffrage_exprimes)
             ratio_legitimite= round(100-total_pas_legitime/nb_reponses*100)
+        #ratio_oui = int(ratio_oui)
+        #ratio_non = int(ratio_non)
+        #ratio_sp = int(ratio_sp)
+        #ratio_legitimite = int(ratio_legitimite)
+        
     return render(request, 'sondage/resultats.html', locals())
      
 def redir(request):
@@ -96,11 +97,7 @@ def control(request):
         elif request.POST.get('bouton') == "desactive":
             statutResultat.statut = "desactive"
         elif request.POST.get('bouton') == "RAZ":
-            for r in Reponse.objects.all():
-                r.points = 50;
-                r.question_pas_claire=False
-                r.ressources_insuffisantes=False
-                r.save()                
+            Reponse.objects.all().delete()                
             statutResultat.statut = "RAZ"
         statutResultat.save()
     return render(request, 'sondage/control.html', locals())
