@@ -19,6 +19,9 @@ class SondageRedirectView(RedirectView):
 def index(request):
     return render(request, 'sondage/index.html')
 
+def choiceNb(request):
+    return render(request, 'sondage/choiceNb.html')
+
 def form(request, ouiNonSliderValue=50):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
