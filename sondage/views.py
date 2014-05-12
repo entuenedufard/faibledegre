@@ -58,7 +58,8 @@ def resultats(request):
         is_blank = True
     else:
         result_list = Reponse.objects.all()
-        nb_reponses = len(result_list)
+        nb_connected = len(result_list)
+        nb_reponses = 0
         nb_suffrage_exprimes = 0
         total_oui = 0.0
         total_non = 0.0
@@ -68,19 +69,20 @@ def resultats(request):
         ratio_non = 0.0
         ratio_sp = 0.0
         ratio_legitimite = 100
-        if not nb_reponses==0:
+        if not nb_connected==0:
             for r in result_list:
+                nb_reponses += r.coef
                 if r.question_pas_claire or r.ressources_insuffisantes :
-                    total_pas_legitime += 1
+                    total_pas_legitime += r.coef
                 else :
-                    nb_suffrage_exprimes += 1
-                    total_non += 100-r.points
-                    total_oui += r.points
+                    nb_suffrage_exprimes += r.coef
+                    total_non += (100-r.points)*r.coef
+                    total_oui += (r.points)*r.coef
                     #total_sp + = 50-(math.fabs(r.points-50))
-            ratio_oui = round(total_oui/nb_suffrage_exprimes)
-            ratio_non = round(total_non/nb_suffrage_exprimes)
-            ratio_sp = round(total_sp/nb_suffrage_exprimes)
-            ratio_legitimite= round(100-total_pas_legitime/nb_reponses*100)
+            ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
+            ratio_non = int(round(total_non/nb_suffrage_exprimes))
+            ratio_sp = int(round(total_sp/nb_suffrage_exprimes))
+            ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100))
         #ratio_oui = int(ratio_oui)
         #ratio_non = int(ratio_non)
         #ratio_sp = int(ratio_sp)
