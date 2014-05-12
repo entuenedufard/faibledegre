@@ -8,12 +8,12 @@
 </head>
 <body>
 {% if not is_blank %}	
-<div id="wrapper">	
+<div id="wrapper">
 	<div id="cons">
-		<span>NON <em id="no-percent">{{ratio_non}}%</em></span>
+					<span id="cons-text">NON <em id="no-percent">{{ratio_non}}%</em></span>	
 	</div>
 	<div id="pros">
-		<span>OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
+		<span id="pros-text">OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
 	</div>
 	<div id="notsure">
 		<span>SAIT PAS  <em id="sp-percent">{{ratio_sp}}%</em></span>
@@ -30,27 +30,32 @@
 <script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
     <script type="text/javascript">
         $( window ).load(function(){
+			if ({{ratio_oui}}<20 && {{ratio_non}}>50){ // si on est au début à 0 partout ça le fera pas du coup
+				$('#pros-text').css("right", "150px")
+			}
+			if ({{ratio_non}}<20 && {{ratio_oui}}>50){
+				$('#cons-text').css("left", "150px")
+			}
+            var yespercent = $('#yes-percent').text();
               var nopercent = $('#no-percent').text();
-			  if (nopercent=="0,0%"){
+			  if (nopercent=="0,0%" && yespercent=="0,0%"){
 			  	$('#no-percent').text("0%");
 				$('#cons').css("width", "50%");
-			  }
-			  else {
-				  $('#cons').css("width", nopercent);
-		  		}
-              var yespercent = $('#yes-percent').text();
-			  if (yespercent=="0,0%"){
 			  	$('#yes-percent').text("0%");
 				$('#pros').css("width", "50%");
 			  }
 			  else {
-			  $('#pros').css("width", yespercent);
+				  $('#cons').css("width", nopercent);
+				  $('#pros').css("width", yespercent);
+		  		}
               var sppercent = $('#sp-percent').text();
-			  if (yespercent=="0,0%"){
+			  if (sppercent=="0,0%"){
 			  	$('#sp-percent').text("0%");
 			  }
-		  }
+		  
         });
 	</script>
+{% else %}
+<div id="black-wrapper"></div>
 {% endif %}
 </body>

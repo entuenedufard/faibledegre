@@ -17,7 +17,11 @@ class SondageRedirectView(RedirectView):
         return reverse("sondage:index")
 
 def index(request):
-    return render(request, 'sondage/index.html')
+    statut = Statut.objects.get(label="resultat").statut
+    if statut == "RAZ" or request.method=='GET':
+        return render(request, 'sondage/index.html')
+    else:
+        return render(request, 'sondage/choiceNb.html')
 
 def choiceNb(request):
     return render(request, 'sondage/choiceNb.html')
