@@ -13,6 +13,7 @@ class Reponse(models.Model):
     """
     points = models.IntegerField(default=0, validators=[validate_points])
     timestamp = models.DateTimeField(auto_now_add=True)
+    sait_vraiment_pas = models.BooleanField()
     question_pas_claire = models.BooleanField()
     ressources_insuffisantes = models.BooleanField()
     adresse = models.IPAddressField(null=True, blank=True)

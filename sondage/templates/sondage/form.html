@@ -45,10 +45,16 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="well" id="well-reserve">
+						<div class="checkbox" id="sait-vraiment-pas">
+							<label>
+								{{form.sait_vraiment_pas}}
+								Nan mais là je sais vraiment pas / ne se prononce pas
+							</label>
+						</div>
 						<div class="checkbox" id="pas-clair">
 							<label>
 								{{form.question_pas_claire}}
-								La question n'est pas suffisamment claire
+								La question n'est pas suffisamment claire / est biaisée
 							</label>
 						</div>
 						<div class="checkbox" id="manque-ressource">
@@ -74,6 +80,9 @@
     <script type="text/javascript">
         $( '#suspendus' ).show(function(){
               $(this).fadeOut(5000);
+        });
+        $( '#sait-vraiment-pas' ).change(function(){
+              $("#vote-form").submit();
         });
         $( '#pas-clair' ).change(function(){
               $("#vote-form").submit();
