@@ -32,6 +32,9 @@ def form(request, ouiNonSliderValue=50):
     dataForm = {"points":50, "question_pas_claire":False, "ressources_insuffisantes":False, "coef":1}
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
+        form = ReponseForm(data=dataForm)
+        ouiNonSliderValue = 50
+        return render(request, 'sondage/form.html', locals())
     if request.method == 'POST':
         remote_addr = request.META.get("HTTP_X_FORWARDED_FOR")
         if "choixCoef" in request.POST: #ça veut dire qu'on arrive de l'accueil
@@ -83,14 +86,12 @@ def resultats(request):
                     total_non += (100-r.points)*r.coef
                     total_oui += (r.points)*r.coef
                     #total_sp + = 50-(math.fabs(r.points-50))
-            ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
-            ratio_non = int(round(total_non/nb_suffrage_exprimes))
-            ratio_sp = int(round(total_sp/nb_suffrage_exprimes))
-            ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100))
-        #ratio_oui = int(ratio_oui)
-        #ratio_non = int(ratio_non)
-        #ratio_sp = int(ratio_sp)
-        #ratio_legitimite = int(ratio_legitimite)
+                ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100))
+            if not nb_suffrage_exprimes==0:
+                ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
+                ratio_non = int(round(total_non/nb_suffrage_exprimes))
+                ratio_sp = int(round(total_sp/nb_suffrage_exprimes))
+
         
     return render(request, 'sondage/resultats.html', locals())
      

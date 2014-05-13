@@ -16,14 +16,14 @@
 		<span id="pros-text">OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
 	</div>
 	<div id="notsure">
-		<span>SAIT PAS  <em id="sp-percent">{{ratio_sp}}%</em></span>
+		<span id = "indecision">TAUX D'INDÉCISION  <em id="sp-percent">{{ratio_sp}}%</em></span>
 	</div>
 	<div id="bottom">
 		<div class="left">
 			{{nb_reponses}} VOTANT(S)
 		</div> 
 		<div class="right">
-			LÉGITIMITÉ DE LA QUESTION : {{ratio_legitimite}}%
+			VALIDITÉ DE LA QUESTION : {{ratio_legitimite}}%
 		</div>
 	</div>
 </div>
@@ -35,6 +35,9 @@
 			}
 			if ({{ratio_non}}<20 && {{ratio_oui}}>50){
 				$('#cons-text').css("left", "150px")
+			}
+			if ({{ratio_oui}}==100){
+				$('#cons').css("border", "none")
 			}
             var yespercent = $('#yes-percent').text();
               var nopercent = $('#no-percent').text();
