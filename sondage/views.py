@@ -70,11 +70,12 @@ def resultats(request):
         nb_suffrage_exprimes = 0
         total_oui = 0.0
         total_non = 0.0
-        total_sp = 0.0
+        total_homogeneite = 0.0
         total_pas_legitime = 0.0
+        ecart_moyenne = 0.0
         ratio_oui = 0.0
         ratio_non = 0.0
-        ratio_sp = 0.0
+        ratio_homogeneite = 0.0
         ratio_legitimite = 100
         if not nb_connected==0:
             for r in result_list:
@@ -85,12 +86,14 @@ def resultats(request):
                     nb_suffrage_exprimes += r.coef
                     total_non += (100-r.points)*r.coef
                     total_oui += (r.points)*r.coef
-                    #total_sp + = 50-(math.fabs(r.points-50))
-                ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100))
+                    #total_sp += 50-(abs(r.points-50))
+            ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100)) 
             if not nb_suffrage_exprimes==0:
                 ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
                 ratio_non = int(round(total_non/nb_suffrage_exprimes))
-                ratio_sp = int(round(total_sp/nb_suffrage_exprimes))
+                for r in result_list:
+                    ecart_moyenne += abs(((r.points)*r.coef)-ratio_oui)
+                ratio_homogeneite = 100-(round(2*ecart_moyenne/nb_suffrage_exprimes))
 
         
     return render(request, 'sondage/resultats.html', locals())

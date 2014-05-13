@@ -16,7 +16,7 @@
 		<span id="pros-text">OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
 	</div>
 	<div id="notsure">
-		<span id = "indecision">TAUX D'INDÉCISION  <em id="sp-percent">{{ratio_sp}}%</em></span>
+		<span id = "indecision">HOMOGÉNÉITÉ <em id="homogeneite-percent">{{ratio_homogeneite}}%</em></span>
 	</div>
 	<div id="bottom">
 		<div class="left">
@@ -51,9 +51,9 @@
 				  $('#cons').css("width", nopercent);
 				  $('#pros').css("width", yespercent);
 		  		}
-              var sppercent = $('#sp-percent').text();
-			  if (sppercent=="0,0%"){
-			  	$('#sp-percent').text("0%");
+              var homogeneitepercent = $('#homogeneite-percent').text();
+			  if (homogeneitepercent=="0,0%"){
+			  	$('#homogeneite-percent').text("0%");
 			  }
 		  
         });
