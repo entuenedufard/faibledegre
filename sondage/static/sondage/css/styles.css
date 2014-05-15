@@ -32,7 +32,7 @@ body {
 	text-align : center;
 }
 
-#un-btn{
+#un-btn, #deux-btn{
 	display:block;
 	margin-left:auto;
 	margin-right:auto;
@@ -41,15 +41,9 @@ body {
 	border-color:#aaaaaa;
 	color:#555555;
 }
-#deux-btn{
-	display:block;
-	margin-left:auto;
-	margin-right:auto;
-	margin-bottom:20px;
-	background-color:#e4e4e4;
-	border-color:#aaaaaa;
-	color:#555555;
-}
+
+/*RESULTS*/
+
 
 #wrapper {
 	height:100%;
@@ -163,6 +157,10 @@ body {
 	float:right;
 }
 
+#bottom .right em{
+	font-size:2rem;
+}
+
 /* FORM QUESTION */
 
 .std-form {
@@ -253,6 +251,35 @@ body {
 
 .badge{
 	background-color:#595959 !important;
+}
+
+
+/* FORM CONTROL */
+
+.ctrl-form {
+	width:100%;
+	margin-right: auto;
+	margin-left: auto;	
+	text-align:center;
+	padding-top:20px;
+	font-size:1rem;
+} 
+
+.ctrl-form input{
+	margin-bottom: 20px;	
+} 
+
+#black-btn{
+	background:black;
+	color:white;
+}
+
+#active-status{
+	font-size:1rem;
+	margin-top:5%;
+	padding-left:15px;
+	padding-right:15px;
+	text-align : center;
 }
 
 /*.std-form input[type='submit'] {

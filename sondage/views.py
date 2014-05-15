@@ -18,7 +18,7 @@ class SondageRedirectView(RedirectView):
 
 def index(request):
     statut = Statut.objects.get(label="resultat").statut
-    if statut == "RAZ" or request.method=='GET':
+    if statut == "BLACK" or request.method=='GET':
         return render(request, 'sondage/index.html')
     else:
         return render(request, 'sondage/choiceNb.html')
@@ -61,7 +61,7 @@ def form(request, ouiNonSliderValue=50):
 def resultats(request):
     statut = Statut.objects.get(label="resultat").statut
     is_blank = False
-    if statut == "RAZ":
+    if statut == "BLACK":
         is_blank = True
     else:
         result_list = Reponse.objects.all()
@@ -72,6 +72,8 @@ def resultats(request):
         total_non = 0.0
         total_homogeneite = 0.0
         total_pas_legitime = 0.0
+        total_pas_clair=0.0
+        total_manque_ressource=0.0
         ecart_moyenne = 0.0
         ratio_oui = 0.0
         ratio_non = 0.0
@@ -80,6 +82,10 @@ def resultats(request):
         if not nb_connected==0:
             for r in result_list:
                 nb_reponses += r.coef
+                if r.question_pas_claire:
+                    total_pas_clair += r.coef
+                if r.ressources_insuffisantes:
+                    total_manque_ressource += r.coef
                 if r.question_pas_claire or r.ressources_insuffisantes :
                     total_pas_legitime += r.coef
                 else :
@@ -87,12 +93,15 @@ def resultats(request):
                     total_non += (100-r.points)*r.coef
                     total_oui += (r.points)*r.coef
                     #total_sp += 50-(abs(r.points-50))
-            ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100)) 
+            ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100))
+            ratio_pas_clair = int(round(total_pas_clair/nb_reponses*100))
+            ratio_manque_ressource = int(round(total_manque_ressource/nb_reponses*100))
             if not nb_suffrage_exprimes==0:
                 ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
                 ratio_non = int(round(total_non/nb_suffrage_exprimes))
                 for r in result_list:
-                    ecart_moyenne += abs(((r.points)*r.coef)-ratio_oui)
+                    if not (r.question_pas_claire or r.ressources_insuffisantes) :
+                        ecart_moyenne += abs(((r.points)*r.coef)-ratio_oui)
                 ratio_homogeneite = 100-(round(2*ecart_moyenne/nb_suffrage_exprimes))
 
         
@@ -104,14 +113,16 @@ def redir(request):
 def control(request):
     statutResultat = Statut.objects.get(label="resultat")
     if request.method == 'POST':
-        print (request.POST.get('bouton'))
         if request.POST.get('bouton') == "active":
             statutResultat.statut = "active"
-        elif request.POST.get('bouton') == "desactive":
-            statutResultat.statut = "desactive"
         elif request.POST.get('bouton') == "RAZ":
+            Reponse.objects.all().delete()
+        elif request.POST.get('bouton') == "pause":
+            statutResultat.statut = "pause"
+        elif request.POST.get('bouton') == "BLACK":
             Reponse.objects.all().delete()                
-            statutResultat.statut = "RAZ"
+            statutResultat.statut = "BLACK"
         statutResultat.save()
+    currentStatus=statutResultat.statut
     return render(request, 'sondage/control.html', locals())
     
