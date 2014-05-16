@@ -231,10 +231,15 @@ body {
 	padding-right:30px;
 }
 
-.std-form #well-reserve, .std-form #well-fed-up{
+.std-form #well-reserve, .std-form #well-fed-up, .std-form #well-biased{
 	font-size:1.2rem;
 	margin-left:15px;
 	margin-right:15px;
+}
+
+.std-form #well-reserve{
+	background-color:#dddddd;
+	border-color:#aaaaaa;
 }
 
 .std-form #well-fed-up{

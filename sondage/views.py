@@ -31,11 +31,6 @@ def form(request, ouiNonSliderValue=50):
     deactive = False
     dataForm = {"points":50, "biased_question":False, "question_pas_claire":False, "ressources_insuffisantes":False, "coef":1}
     hasVoted = True
-    if not (statutResultat=="active"):
-        deactive = True #on indique que c'est suspendu
-        form = ReponseForm(data=dataForm)
-        ouiNonSliderValue = 50
-        return render(request, 'sondage/form.html', locals())
     if request.method == 'POST':
         remote_addr = request.META.get("HTTP_X_FORWARDED_FOR")
         if "choixCoef" in request.POST: #ça veut dire qu'on arrive de l'accueil
@@ -48,13 +43,19 @@ def form(request, ouiNonSliderValue=50):
             instance = Reponse.objects.get(adresse=remote_addr)
             form = ReponseForm(instance=instance, data=dataForm)
         except Reponse.DoesNotExist:
-            form = ReponseForm(dataForm)           
+            form = ReponseForm(dataForm)
+        if not (statutResultat=="active"):
+            deactive = True #on indique que c'est suspendu
+            form = ReponseForm(data=dataForm)
+            ouiNonSliderValue = 50
+            return render(request, 'sondage/form.html', locals()) 
  #on compte les points
-        instance = form.save(commit=False)
-        instance.has_voted = hasVoted
-        instance.adresse = remote_addr
-        instance.save()
-        ouiNonSliderValue = instance.points  
+        else:
+            instance = form.save(commit=False)
+            instance.has_voted = hasVoted
+            instance.adresse = remote_addr
+            instance.save()
+            ouiNonSliderValue = instance.points  
     else: # Si ce n'est pas du POST, c'est probablement une requête GET
             form = ReponseForm(data=dataForm)       
     return render(request, 'sondage/form.html', locals())
@@ -80,25 +81,13 @@ def resultats(request):
         total_non = 0.0
         total_homogeneite = 0.0
         total_pas_legitime = 0.0
-        total_biased = 0.0
-        total_pas_clair=0.0
-        total_manque_ressource=0.0
         ecart_moyenne = 0.0
         ratio_oui = 0.0
         ratio_non = 0.0
         ratio_homogeneite = 0.0
         ratio_legitimite = 100
-        ratio_biased = 0.0
-        ratio_pas_clair = 0.0
-        ratio_manque_ressource = 0.0
         if not nb_votes == 0:
             for r in vote_list:
-                if r.biased_question:
-                    total_biased += r.coef
-                if r.question_pas_claire:
-                    total_pas_clair += r.coef
-                if r.ressources_insuffisantes:
-                    total_manque_ressource += r.coef
                 if r.question_pas_claire or r.ressources_insuffisantes or r.biased_question:
                     total_pas_legitime += r.coef
                 if not (r.question_pas_claire or r.ressources_insuffisantes) :
@@ -107,15 +96,12 @@ def resultats(request):
                     total_oui += (r.points)*r.coef
                     #total_sp += 50-(abs(r.points-50))
             ratio_legitimite= int(round(100-total_pas_legitime/nb_votes*100))
-            ratio_biased = int(round(total_biased/nb_votes*100))
-            ratio_pas_clair = int(round(total_pas_clair/nb_votes*100))
-            ratio_manque_ressource = int(round(total_manque_ressource/nb_votes*100))
             if not nb_suffrage_exprimes==0:
                 ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
                 ratio_non = 100-ratio_oui
-                for r in device_connected:
+                for r in vote_list:
                     if not (r.question_pas_claire or r.ressources_insuffisantes) :
-                        ecart_moyenne += abs(((r.points))-ratio_oui)*r.coef
+                        ecart_moyenne += (abs(r.points-ratio_oui))*r.coef
                 ratio_homogeneite = int(100-(round(2*ecart_moyenne/nb_suffrage_exprimes)))
 
         
@@ -129,7 +115,14 @@ def control(request):
     ratio_fed_up = 0.0
     device_connected = Reponse.objects.all()
     nb_voters = 0.0 # ie nb_votes*coef
+    nb_votes = 0
     nb_fed_up = 0.0
+    total_biased = 0.0
+    total_pas_clair=0.0
+    total_manque_ressource=0.0
+    ratio_biased = 0.0
+    ratio_pas_clair = 0.0
+    ratio_manque_ressource = 0.0
     vote_list = list()
     for r in device_connected:
         nb_voters += r.coef
@@ -141,8 +134,19 @@ def control(request):
     if nb_voters == 0:
        nb_voters = 1 #to avoid zero division
     ratio_fed_up = int(round(nb_fed_up/nb_voters*100))
+    
     for r in vote_list:
-        pass
+        if r.biased_question:
+            total_biased += r.coef
+        if r.question_pas_claire:
+            total_pas_clair += r.coef
+        if r.ressources_insuffisantes:
+            total_manque_ressource += r.coef
+    if nb_votes == 0:
+       nb_votes = 1 #to avoid zero division
+    ratio_biased = int(round(total_biased/nb_votes*100))
+    ratio_pas_clair = int(round(total_pas_clair/nb_votes*100))
+    ratio_manque_ressource = int(round(total_manque_ressource/nb_votes*100))
     
     if request.method == 'POST':    
         if request.POST.get('bouton') == "active":
@@ -151,8 +155,9 @@ def control(request):
             for r in Reponse.objects.all():
                 r.has_voted=False
                 r.save()
-        elif request.POST.get('bouton') == "pause":
-            statutResultat.statut = "pause"
+        elif request.POST.get('bouton') == "INIT":
+            Reponse.objects.all().delete()
+            statutResultat.statut = "BLACK"
         elif request.POST.get('bouton') == "BLACK":
             for r in Reponse.objects.all():
                 r.has_voted=False
