@@ -30,6 +30,7 @@ def form(request, ouiNonSliderValue=50):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
     dataForm = {"points":50, "question_pas_claire":False, "ressources_insuffisantes":False, "coef":1}
+    hasVoted = True
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
         form = ReponseForm(data=dataForm)
@@ -38,6 +39,7 @@ def form(request, ouiNonSliderValue=50):
     if request.method == 'POST':
         remote_addr = request.META.get("HTTP_X_FORWARDED_FOR")
         if "choixCoef" in request.POST: #ça veut dire qu'on arrive de l'accueil
+            hasVoted = False
             if request.POST["choixCoef"]=="DEUX":
                 dataForm["coef"]=2
         else: #si on vient du form lui-même
@@ -49,7 +51,7 @@ def form(request, ouiNonSliderValue=50):
             form = ReponseForm(dataForm)           
  #on compte les points
         instance = form.save(commit=False)
-        instance.has_voted = True
+        instance.has_voted = hasVoted
         instance.adresse = remote_addr
         instance.save()
         ouiNonSliderValue = instance.points  
@@ -63,10 +65,17 @@ def resultats(request):
     if statut == "BLACK":
         is_blank = True
     else:
-        result_list = Reponse.objects.all()
-        nb_connected = len(result_list)
-        nb_votes = 0
-        nb_suffrage_exprimes = 0
+        device_connected = Reponse.objects.all()
+        nb_connected = len(device_connected)
+        nb_votes = 0 
+        nb_voters = 0 # ie nb_votes*coef
+        nb_suffrage_exprimes = 0 # ie votes that are not qualifying the question as invalid
+        vote_list = list()
+        for r in device_connected:
+            nb_voters += r.coef
+            if r.has_voted:
+                nb_votes += r.coef
+                vote_list.append(r)
         total_oui = 0.0
         total_non = 0.0
         total_homogeneite = 0.0
@@ -78,9 +87,8 @@ def resultats(request):
         ratio_non = 0.0
         ratio_homogeneite = 0.0
         ratio_legitimite = 100
-        if not nb_connected==0:
-            for r in result_list:
-                nb_votes += r.coef
+        if not nb_votes == 0:
+            for r in vote_list:
                 if r.question_pas_claire:
                     total_pas_clair += r.coef
                 if r.ressources_insuffisantes:
@@ -98,10 +106,10 @@ def resultats(request):
             if not nb_suffrage_exprimes==0:
                 ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
                 ratio_non = 100-ratio_oui
-                for r in result_list:
+                for r in device_connected:
                     if not (r.question_pas_claire or r.ressources_insuffisantes) :
                         ecart_moyenne += abs(((r.points))-ratio_oui)*r.coef
-                ratio_homogeneite = 100-(round(2*ecart_moyenne/nb_suffrage_exprimes))
+                ratio_homogeneite = int(100-(round(2*ecart_moyenne/nb_suffrage_exprimes)))
 
         
     return render(request, 'sondage/resultats.html', locals())
@@ -115,11 +123,15 @@ def control(request):
         if request.POST.get('bouton') == "active":
             statutResultat.statut = "active"
         elif request.POST.get('bouton') == "RAZ":
-            Reponse.objects.all().delete()
+            for r in Reponse.objects.all():
+                r.has_voted=False
+                r.save()
         elif request.POST.get('bouton') == "pause":
             statutResultat.statut = "pause"
         elif request.POST.get('bouton') == "BLACK":
-            Reponse.objects.all().delete()                
+            for r in Reponse.objects.all():
+                r.has_voted=False
+                r.save()              
             statutResultat.statut = "BLACK"
         statutResultat.save()
     currentStatus=statutResultat.statut
