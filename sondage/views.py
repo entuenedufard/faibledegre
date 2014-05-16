@@ -29,7 +29,7 @@ def choiceNb(request):
 def form(request, ouiNonSliderValue=50):
     statutResultat = Statut.objects.get(label="resultat").statut
     deactive = False
-    dataForm = {"points":50, "question_pas_claire":False, "ressources_insuffisantes":False, "coef":1}
+    dataForm = {"points":50, "biased_question":False, "question_pas_claire":False, "ressources_insuffisantes":False, "coef":1}
     hasVoted = True
     if not (statutResultat=="active"):
         deactive = True #on indique que c'est suspendu
@@ -80,6 +80,7 @@ def resultats(request):
         total_non = 0.0
         total_homogeneite = 0.0
         total_pas_legitime = 0.0
+        total_biased = 0.0
         total_pas_clair=0.0
         total_manque_ressource=0.0
         ecart_moyenne = 0.0
@@ -87,20 +88,26 @@ def resultats(request):
         ratio_non = 0.0
         ratio_homogeneite = 0.0
         ratio_legitimite = 100
+        ratio_biased = 0.0
+        ratio_pas_clair = 0.0
+        ratio_manque_ressource = 0.0
         if not nb_votes == 0:
             for r in vote_list:
+                if r.biased_question:
+                    total_biased += r.coef
                 if r.question_pas_claire:
                     total_pas_clair += r.coef
                 if r.ressources_insuffisantes:
                     total_manque_ressource += r.coef
-                if r.question_pas_claire or r.ressources_insuffisantes :
+                if r.question_pas_claire or r.ressources_insuffisantes or r.biased_question:
                     total_pas_legitime += r.coef
-                else :
+                if not (r.question_pas_claire or r.ressources_insuffisantes) :
                     nb_suffrage_exprimes += r.coef
                     total_non += (100-r.points)*r.coef
                     total_oui += (r.points)*r.coef
                     #total_sp += 50-(abs(r.points-50))
             ratio_legitimite= int(round(100-total_pas_legitime/nb_votes*100))
+            ratio_biased = int(round(total_biased/nb_votes*100))
             ratio_pas_clair = int(round(total_pas_clair/nb_votes*100))
             ratio_manque_ressource = int(round(total_manque_ressource/nb_votes*100))
             if not nb_suffrage_exprimes==0:
@@ -123,14 +130,20 @@ def control(request):
     device_connected = Reponse.objects.all()
     nb_voters = 0.0 # ie nb_votes*coef
     nb_fed_up = 0.0
+    vote_list = list()
     for r in device_connected:
         nb_voters += r.coef
+        if r.has_voted:
+            nb_votes += r.coef
+            vote_list.append(r)
         if r.fed_up:
             nb_fed_up += r.coef
     if nb_voters == 0:
        nb_voters = 1 #to avoid zero division
     ratio_fed_up = int(round(nb_fed_up/nb_voters*100))
-    print ("ben alors nb voters = " + str(nb_voters) + " et nb_fed_up = " +  str(nb_fed_up) + "et ratio = " + str(ratio_fed_up))
+    for r in vote_list:
+        pass
+    
     if request.method == 'POST':    
         if request.POST.get('bouton') == "active":
             statutResultat.statut = "active"

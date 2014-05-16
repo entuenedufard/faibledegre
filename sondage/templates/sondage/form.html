@@ -44,17 +44,27 @@
 			</div>
 			<div class="row">
 				<div class="col-xs-12">
+					<div class="well" id="well-biased">
+						<div class="checkbox" id="biased">
+							<label>
+								{{form.biased_question}}
+								La question est biaisée
+							</label>
+						</div>
+					</div>	
+				</div>
+				<div class="col-xs-12">
 					<div class="well" id="well-reserve">
 						<div class="checkbox" id="pas-clair">
 							<label>
 								{{form.question_pas_claire}}
-								La question n'est pas suffisamment claire / est biaisée
+								La question n'est pas claire
 							</label>
 						</div>
 						<div class="checkbox" id="manque-ressource">
 							<label>
 								{{form.ressources_insuffisantes}}
-								Il manque des données pour répondre
+								Il manque des données
 							</label>
 						</div>
 					</div>	
@@ -84,6 +94,9 @@
     <script type="text/javascript">
         $( '#suspendus' ).show(function(){
               $(this).fadeOut(5000);
+        });
+        $( '#biased' ).change(function(){
+              $("#vote-form").submit();
         });
         $( '#sait-vraiment-pas' ).change(function(){
               $("#vote-form").submit();
