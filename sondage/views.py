@@ -98,7 +98,7 @@ def resultats(request):
             ratio_manque_ressource = int(round(total_manque_ressource/nb_reponses*100))
             if not nb_suffrage_exprimes==0:
                 ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
-                ratio_non = int(round(total_non/nb_suffrage_exprimes))
+                ratio_non = 100-ratio_oui
                 for r in result_list:
                     if not (r.question_pas_claire or r.ressources_insuffisantes) :
                         ecart_moyenne += abs(((r.points)*r.coef)-ratio_oui)
