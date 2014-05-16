@@ -47,13 +47,12 @@ def form(request, ouiNonSliderValue=50):
             form = ReponseForm(instance=instance, data=dataForm)
         except Reponse.DoesNotExist:
             form = ReponseForm(dataForm)           
-        if form.is_valid(): #on compte les points
-            instance = form.save(commit=False)
-            instance.adresse = remote_addr
-            instance.save()
-            ouiNonSliderValue = instance.points
-        else:
-            probleme = True    
+ #on compte les points
+        instance = form.save(commit=False)
+        instance.has_voted = True
+        instance.adresse = remote_addr
+        instance.save()
+        ouiNonSliderValue = instance.points  
     else: # Si ce n'est pas du POST, c'est probablement une requête GET
             form = ReponseForm(data=dataForm)       
     return render(request, 'sondage/form.html', locals())
@@ -66,7 +65,7 @@ def resultats(request):
     else:
         result_list = Reponse.objects.all()
         nb_connected = len(result_list)
-        nb_reponses = 0
+        nb_votes = 0
         nb_suffrage_exprimes = 0
         total_oui = 0.0
         total_non = 0.0
@@ -81,7 +80,7 @@ def resultats(request):
         ratio_legitimite = 100
         if not nb_connected==0:
             for r in result_list:
-                nb_reponses += r.coef
+                nb_votes += r.coef
                 if r.question_pas_claire:
                     total_pas_clair += r.coef
                 if r.ressources_insuffisantes:
@@ -93,15 +92,15 @@ def resultats(request):
                     total_non += (100-r.points)*r.coef
                     total_oui += (r.points)*r.coef
                     #total_sp += 50-(abs(r.points-50))
-            ratio_legitimite= int(round(100-total_pas_legitime/nb_reponses*100))
-            ratio_pas_clair = int(round(total_pas_clair/nb_reponses*100))
-            ratio_manque_ressource = int(round(total_manque_ressource/nb_reponses*100))
+            ratio_legitimite= int(round(100-total_pas_legitime/nb_votes*100))
+            ratio_pas_clair = int(round(total_pas_clair/nb_votes*100))
+            ratio_manque_ressource = int(round(total_manque_ressource/nb_votes*100))
             if not nb_suffrage_exprimes==0:
                 ratio_oui = int(round(total_oui/nb_suffrage_exprimes))
                 ratio_non = 100-ratio_oui
                 for r in result_list:
                     if not (r.question_pas_claire or r.ressources_insuffisantes) :
-                        ecart_moyenne += abs(((r.points)*r.coef)-ratio_oui)
+                        ecart_moyenne += abs(((r.points))-ratio_oui)*r.coef
                 ratio_homogeneite = 100-(round(2*ecart_moyenne/nb_suffrage_exprimes))
 
         
