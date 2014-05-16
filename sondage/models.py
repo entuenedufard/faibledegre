@@ -17,6 +17,7 @@ class Reponse(models.Model):
     biased_question = models.BooleanField()
     question_pas_claire = models.BooleanField()
     ressources_insuffisantes = models.BooleanField()
+    fed_up = models.BooleanField()
     adresse = models.IPAddressField(null=True, blank=True)
     coef = models.IntegerField(default=1)
     

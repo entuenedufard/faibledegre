@@ -119,7 +119,19 @@ def redir(request):
     
 def control(request):
     statutResultat = Statut.objects.get(label="resultat")
-    if request.method == 'POST':
+    ratio_fed_up = 0.0
+    device_connected = Reponse.objects.all()
+    nb_voters = 0.0 # ie nb_votes*coef
+    nb_fed_up = 0.0
+    for r in device_connected:
+        nb_voters += r.coef
+        if r.fed_up:
+            nb_fed_up += r.coef
+    if nb_voters == 0:
+       nb_voters = 1 #to avoid zero division
+    ratio_fed_up = int(round(nb_fed_up/nb_voters*100))
+    print ("ben alors nb voters = " + str(nb_voters) + " et nb_fed_up = " +  str(nb_fed_up) + "et ratio = " + str(ratio_fed_up))
+    if request.method == 'POST':    
         if request.POST.get('bouton') == "active":
             statutResultat.statut = "active"
         elif request.POST.get('bouton') == "RAZ":

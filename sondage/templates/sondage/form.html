@@ -59,6 +59,16 @@
 						</div>
 					</div>	
 				</div>
+				<div class="col-xs-12">
+					<div class="well" id="well-fed-up">
+						<div class="checkbox" id="fed-up">
+							<label>
+								{{form.fed_up}}
+								Je pense qu'on devrait continuer dehors
+							</label>
+						</div>
+					</div>	
+				</div>
 			</div>
 			{{form.coef.as_hidden}}
 		
@@ -82,6 +92,9 @@
               $("#vote-form").submit();
         });
         $( '#manque-ressource' ).change(function(){
+              $("#vote-form").submit();
+        });
+        $( '#fed-up' ).change(function(){
               $("#vote-form").submit();
         });
 		$( window ).load(function() {
