@@ -5,7 +5,6 @@
     <meta charset="utf-8">
 	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
     <link href="{% static 'sondage/css/bootstrap.min.css' %}" rel="stylesheet">
-	<link href="{% static 'sondage/css/slider.css' %}" rel="stylesheet">
 	<link href="{% static 'sondage/css/styles.css' %}" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -13,9 +12,11 @@
   <body>
 <title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
 
-<div id="standby"> VOILÀ, BRAVO, VOUS ÊTES CONNECTÉ/E<br/><br/>Ceci dit, vous pouvez remettre votre appareil en veille, on ne s'en servira pas avant la fin du spectacle. </div>
-<form action="/sondage/" method="post"> {% csrf_token %}
-	<input type="submit" id="bonjour" value="D'accord" id="un-btn" class="btn btn-primary btn-lg"/>
+<div id="howmuch-title"> VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ? </div>
+
+<form action="/sondage/form/" method="post"> {% csrf_token %}
+	<input type="submit" name="choixCoef" value="UN" id="un-btn" class="btn btn-primary btn-lg"/>
+	<input type="submit" name="choixCoef" value="DEUX" id="deux-btn" class="btn btn-primary btn-lg"/> 
 </form>
 
 </body>

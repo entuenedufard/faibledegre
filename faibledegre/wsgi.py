@@ -1,5 +1,5 @@
 """
-WSGI config for essaifaible project.
+WSGI config for faibledegre project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -8,7 +8,10 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "essaifaible.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "faibledegre.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
+
+from dj_static import Cling
+application = Cling(application)

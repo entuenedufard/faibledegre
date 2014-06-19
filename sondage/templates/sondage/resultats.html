@@ -1,20 +1,64 @@
+{% load staticfiles %}
+
 <head>
 <META HTTP-EQUIV="Refresh" CONTENT="1"; URL="/resultats.html">
-
+    <meta charset="utf-8">
+	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
+	<link href="{% static 'sondage/css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
 {% if not is_blank %}	
-	
-bon ben ya {{nb_reponses}} reponses 
-</br>
-OUI : {{ratio_oui}}%
-NON : {{ratio_non}}%
-</br></br>
-SAIT PAS : {{ratio_sp}}%
-</br></br>
-PAS CLAIR : {{ratio_pas_clair}}%
-</br></br>
-MANQUE DE RESSOURCE : {{ratio_manque_ressource}}%
-
+<div id="wrapper">
+	<div id="cons">
+					<span id="cons-text">NON <em id="no-percent">{{ratio_non}}%</em></span>	
+	</div>
+	<div id="pros">
+		<span id="pros-text">OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
+	</div>
+	<div id="notsure">
+		<span id = "indecision">VALIDITÉ DE LA QUESTION :  <em id="homogeneite-percent">{{ratio_legitimite}}%</em></span>
+	</div>
+	<div id="bottom">
+		<div class="left">
+			{{nb_votes}}/{{nb_voters}} VOTANTS			 
+		</div> 
+		<div class="right">
+			 HOMOGÉNÉITÉ : {{ratio_homogeneite}}%
+		</div>
+	</div>
+</div>
+<script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
+    <script type="text/javascript">
+        $( window ).load(function(){
+			if ({{ratio_oui}}<20 && {{ratio_non}}>50){ // si on est au début à 0 partout ça le fera pas du coup
+				$('#pros-text').css("right", "150px")
+			}
+			if ({{ratio_non}}<20 && {{ratio_oui}}>50){
+				$('#cons-text').css("left", "150px")
+			}
+			if ({{ratio_oui}}==100){
+				$('#cons').css("border", "none")
+			}
+            var yespercent = $('#yes-percent').text();
+              var nopercent = $('#no-percent').text();
+			  if (nopercent=="0,0%" && yespercent=="0,0%"){
+			  	$('#no-percent').text("0%");
+				$('#cons').css("width", "50%");
+			  	$('#yes-percent').text("0%");
+				$('#pros').css("width", "50%");
+			  }
+			  else {
+				  $('#cons').css("width", nopercent);
+				  $('#pros').css("width", yespercent);
+		  		}
+              var homogeneitepercent = $('#homogeneite-percent').text();
+			  if (homogeneitepercent=="0,0%"){
+			  	$('#homogeneite-percent').text("0%");
+			  }
+		  
+        });
+	</script>
+{% else %}
+<div id="black-wrapper"></div>
 {% endif %}
 </body>

@@ -7,4 +7,4 @@ from models import Reponse
 class ReponseForm(forms.ModelForm): 
     class Meta:
         model = Reponse
-        exclude = ('timestamp',)
+        exclude = ('timestamp', 'adresse')

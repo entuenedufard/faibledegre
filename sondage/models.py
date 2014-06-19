@@ -11,10 +11,15 @@ class Reponse(models.Model):
     """
     Une réponse c'est une réponse de quelqu'un bon voilà quoi
     """
+    has_voted = models.BooleanField()
     points = models.IntegerField(default=0, validators=[validate_points])
     timestamp = models.DateTimeField(auto_now_add=True)
+    biased_question = models.BooleanField()
     question_pas_claire = models.BooleanField()
     ressources_insuffisantes = models.BooleanField()
+    fed_up = models.BooleanField()
+    adresse = models.IPAddressField(null=True, blank=True)
+    coef = models.IntegerField(default=1)
     
 class Statut(models.Model):
     """

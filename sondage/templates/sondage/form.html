@@ -1,0 +1,135 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+  <head>
+    <meta charset="utf-8">
+	<title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
+	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
+    <link href="{% static 'sondage/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'sondage/css/slider.css' %}" rel="stylesheet">
+	<link href="{% static 'sondage/css/styles.css' %}" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  </head>
+
+  <body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12">
+				{% if deactive %}	<div id='suspendus' class="alert alert-warning alert-dismissable"> <h1>(Attendez, les votes sont suspendus là en fait) </h1></div>
+				{% endif %}
+			</div>
+		</div>
+		<form id="vote-form" class="std-form" action="/sondage/form/#" method="post">{% csrf_token %}
+			<div class="row" id="wrap-ouinon">
+				<div class="col-xs-6">
+					<span id="label-left">NON</span>
+				</div>
+				<div class="col-xs-6">
+					<span id="label-right">OUI</span>
+				</div>
+			</div>
+			<div class="row" id="wrap-percent">
+				<div class="col-xs-6" id="wrap-percent-left">
+					<span id="percent-left" class="badge"></span>
+				</div>
+				<div class="col-xs-6" id="wrap-percent-right">
+					<span id="percent-right" class="badge"></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12" id="wrap-slider">
+					{{form.points}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="well" id="well-biased">
+						<div class="checkbox" id="biased">
+							<label>
+								{{form.biased_question}}
+								La question est biaisée
+							</label>
+						</div>
+					</div>	
+				</div>
+				<div class="col-xs-12">
+					<div class="well" id="well-reserve">
+						<div class="checkbox" id="pas-clair">
+							<label>
+								{{form.question_pas_claire}}
+								La question n'est pas claire
+							</label>
+						</div>
+						<div class="checkbox" id="manque-ressource">
+							<label>
+								{{form.ressources_insuffisantes}}
+								Il manque des données
+							</label>
+						</div>
+					</div>	
+				</div>
+				<div class="col-xs-12">
+					<div class="well" id="well-fed-up">
+						<div class="checkbox" id="fed-up">
+							<label>
+								{{form.fed_up}}
+								Je pense qu'on devrait continuer dehors
+							</label>
+						</div>
+					</div>	
+				</div>
+			</div>
+			{{form.coef.as_hidden}}
+		
+		</form>
+	</div>
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="{% static 'sondage/js/modernizr.js' %}"></script>
+	<script src="{% static 'sondage/js/jquery-1.11.0.min.js' %}"></script>
+    <script src="{% static 'sondage/js/bootstrap.min.js' %}"></script>    
+	<script src="{% static 'sondage/js/bootstrap-slider.js' %}"></script>
+	
+    <script type="text/javascript">
+        $( '#suspendus' ).show(function(){
+              $(this).fadeOut(5000);
+        });
+        $( '#biased' ).change(function(){
+              $("#vote-form").submit();
+        });
+        $( '#sait-vraiment-pas' ).change(function(){
+              $("#vote-form").submit();
+        });
+        $( '#pas-clair' ).change(function(){
+              $("#vote-form").submit();
+        });
+        $( '#manque-ressource' ).change(function(){
+              $("#vote-form").submit();
+        });
+        $( '#fed-up' ).change(function(){
+              $("#vote-form").submit();
+        });
+		$( window ).load(function() {
+			var pourcent = $('#id_points').attr('value');
+		 	 $('#percent-left').text((100-pourcent).toString()+"%");
+			 $('#percent-right').text(pourcent.toString()+"%");
+		});
+    </script>
+	<script>
+			$('#id_points').slider({
+			  min: 0,
+			  max: 100,
+			  step: 1, 
+			  tooltip: 'hide',
+			  value: {{ouiNonSliderValue}},
+			  selection: 'none'
+	        }).on('slide', function(ev){
+				$("#percent-left").text(100-ev.value+"%");
+				$("#percent-right").text(ev.value+"%");
+			}).on('slideStop', function(ev){
+				$("#vote-form").submit();
+			});;		
+	  </script>
+  </body>
+</html>
