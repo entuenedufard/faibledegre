@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'essaifaible.views.home', name='home'),
+    # url(r'^$', 'faibledegre.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     
     url(r'^sondage/', include('sondage.urls', namespace="sondage")),
