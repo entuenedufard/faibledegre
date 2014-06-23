@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load i18n %}
 <!DOCTYPE html>
 
   <head>
@@ -11,11 +12,19 @@
 
   </head>
   <body>
-<title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
+<title>{% trans "UN FAIBLE DEGRÉ D'ORIGINALITÉ"%}</title>
 
-<div id="standby"> VOILÀ, BRAVO, VOUS ÊTES CONNECTÉ/E<br/><br/>Ceci dit, vous pouvez remettre votre appareil en veille, on ne s'en servira pas avant la fin du spectacle. </div>
+{% get_available_languages as languages %}
+
+{% for lang_code, lang_name in languages %}
+	{% language lang_code %}
+		<a href="{% url "sondage:index" %}"> {{lang_name}} </a>
+	{% endlanguage %}
+{% endfor %}
+
+<div id="standby"> {% trans "VOILÀ, BRAVO, VOUS ÊTES CONNECTÉ/E" %}<br/><br/>{% trans "Ceci dit, vous pouvez remettre votre appareil en veille, on ne s'en servira pas avant la fin du spectacle." %} </div>
 <form action="/sondage/" method="post"> {% csrf_token %}
-	<input type="submit" id="bonjour" value="D'accord" id="un-btn" class="btn btn-primary btn-lg"/>
+	<input type="submit" id="bonjour" value="{% trans "D'accord" %}" id="un-btn" class="btn btn-primary btn-lg"/>
 </form>
 
 </body>

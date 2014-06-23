@@ -1,3 +1,5 @@
+#-*- encoding: utf-8 -*-
+
 """
 Django settings for faibledegre project.
 
@@ -24,6 +26,8 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+TEMPLATE_DIRS = ("templates/")
+
 ALLOWED_HOSTS = []
 
 
@@ -37,7 +41,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sondage',
-    'gunicorn'
+    'gunicorn',
+    'rosetta'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -47,6 +52,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'faibledegre.urls'
@@ -67,7 +73,16 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'fr-FR'
+LANGUAGE_CODE = 'fr'
+
+LANGUAGES = (
+    ('en', 'English'),
+    ('fr', "French"),
+)
+
+ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = 'fr'
+
+ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = 'French' 
 
 TIME_ZONE = 'Europe/Brussels'
 
