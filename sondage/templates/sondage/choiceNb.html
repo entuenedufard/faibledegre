@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load i18n %}
 <!DOCTYPE html>
 
   <head>
@@ -10,13 +11,13 @@
 
   </head>
   <body>
-<title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
+<title>{% trans "UN FAIBLE DEGRÉ D'ORIGINALITÉ" %}</title>
 
-<div id="howmuch-title"> VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ? </div>
+<div id="howmuch-title">{% trans  "VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ?" %}</div>
 
-<form action="/sondage/form/" method="post"> {% csrf_token %}
-	<input type="submit" name="choixCoef" value="UN" id="un-btn" class="btn btn-primary btn-lg"/>
-	<input type="submit" name="choixCoef" value="DEUX" id="deux-btn" class="btn btn-primary btn-lg"/> 
+<form action="{% url "sondage:form" %}" method="post"> {% csrf_token %}
+	<input type="submit" name="choixCoef" value= {% trans "UN" %} id="un-btn" class="btn btn-primary btn-lg"/>
+	<input type="submit" name="choixCoef" value= {% trans "DEUX" %} id="deux-btn" class="btn btn-primary btn-lg"/> 
 </form>
 
 </body>

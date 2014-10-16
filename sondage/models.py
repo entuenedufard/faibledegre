@@ -24,7 +24,7 @@ class Reponse(models.Model):
 class Statut(models.Model):
     """
     Alors ici c'est bien pourri mais on stocke le label 
-    du statut (genre statut de l'affichage des résultat - actif, désactivé ou
+    du statut (genre statut de l'affichage des résultats - actif, désactivé ou
     remis à zéro) et le statut afférent, par exemple activé, desactivé ou RAZ
     """
     label = models.CharField(max_length=200)

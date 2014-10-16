@@ -2,7 +2,7 @@
 
 #from math import fabs
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.base import RedirectView
 from django.core.urlresolvers import reverse
@@ -12,7 +12,7 @@ from sondage.forms import ReponseForm
 from .models import Reponse, Statut
 
 class SondageRedirectView(RedirectView):
-    
+    """c'est la vue qui redirige depuis la racine vers sondage/"""
     def get_redirect_url(self, *arg, **kwargs):
         return reverse("sondage:index")
 
@@ -21,7 +21,7 @@ def index(request):
     if statut == "BLACK" or request.method=='GET':
         return render(request, 'sondage/index.html')
     else:
-        return render(request, 'sondage/choiceNb.html')
+        return redirect("sondage:choiceNb")
 
 def choiceNb(request):
     return render(request, 'sondage/choiceNb.html')
@@ -44,6 +44,7 @@ def form(request, ouiNonSliderValue=50):
             form = ReponseForm(instance=instance, data=dataForm)
         except Reponse.DoesNotExist:
             form = ReponseForm(dataForm)
+            
         if not (statutResultat=="active"):
             deactive = True #on indique que c'est suspendu
             form = ReponseForm(data=dataForm)
@@ -103,7 +104,6 @@ def resultats(request):
                     if not (r.question_pas_claire or r.ressources_insuffisantes) :
                         ecart_moyenne += (abs(r.points-ratio_oui))*r.coef
                 ratio_homogeneite = int(100-(round(2*ecart_moyenne/nb_suffrage_exprimes)))
-
         
     return render(request, 'sondage/resultats.html', locals())
      
@@ -152,16 +152,12 @@ def control(request):
         if request.POST.get('bouton') == "active":
             statutResultat.statut = "active"
         elif request.POST.get('bouton') == "RAZ":
-            for r in Reponse.objects.all():
-                r.has_voted=False
-                r.save()
+            Reponse.objects.all().update(has_voted=False)
         elif request.POST.get('bouton') == "INIT":
             Reponse.objects.all().delete()
             statutResultat.statut = "BLACK"
         elif request.POST.get('bouton') == "BLACK":
-            for r in Reponse.objects.all():
-                r.has_voted=False
-                r.save()              
+            Reponse.objects.all().update(has_voted=False)            
             statutResultat.statut = "BLACK"
         statutResultat.save()
     currentStatus=statutResultat.statut

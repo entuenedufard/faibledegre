@@ -23,7 +23,7 @@
 {% endfor %}
 
 <div id="standby"> {% trans "VOILÀ, BRAVO, VOUS ÊTES CONNECTÉ/E" %}<br/><br/>{% trans "Ceci dit, vous pouvez remettre votre appareil en veille, on ne s'en servira pas avant la fin du spectacle." %} </div>
-<form action="/sondage/" method="post"> {% csrf_token %}
+<form action="{% url "sondage:index" %}" method="post"> {% csrf_token %}
 	<input type="submit" id="bonjour" value="{% trans "D'accord" %}" id="un-btn" class="btn btn-primary btn-lg"/>
 </form>
 

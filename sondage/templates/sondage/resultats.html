@@ -1,8 +1,11 @@
 {% load staticfiles %}
+{% load i18n %}
 
 <head>
 <META HTTP-EQUIV="Refresh" CONTENT="1"; URL="/resultats.html">
+	<meta http-equiv="content-language" content="fr-FR" />
     <meta charset="utf-8">
+	
 	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
 	<link href="{% static 'sondage/css/styles.css' %}" rel="stylesheet">
 </head>
@@ -10,20 +13,20 @@
 {% if not is_blank %}	
 <div id="wrapper">
 	<div id="cons">
-					<span id="cons-text">NON <em id="no-percent">{{ratio_non}}%</em></span>	
+					<span id="cons-text">{% trans "NON"%} <em id="no-percent">{{ratio_non}}%</em></span>	
 	</div>
 	<div id="pros">
-		<span id="pros-text">OUI <em id="yes-percent">{{ratio_oui}}%</em></span>
+		<span id="pros-text">{% trans "OUI"%} <em id="yes-percent">{{ratio_oui}}%</em></span>
 	</div>
 	<div id="notsure">
-		<span id = "indecision">VALIDITÉ DE LA QUESTION :  <em id="homogeneite-percent">{{ratio_legitimite}}%</em></span>
+		<span id = "indecision">{% trans "VALIDITÉ DE LA QUESTION :"%}  <em id="homogeneite-percent">{{ratio_legitimite}}%</em></span>
 	</div>
 	<div id="bottom">
 		<div class="left">
-			{{nb_votes}}/{{nb_voters}} VOTANTS			 
+			{{nb_votes}}/{{nb_voters}} {% trans "VOTANTS"%}		 
 		</div> 
 		<div class="right">
-			 HOMOGÉNÉITÉ : {{ratio_homogeneite}}%
+			 {% trans "HOMOGÉNÉITÉ :"%} {{ratio_homogeneite}}%
 		</div>
 	</div>
 </div>
@@ -41,7 +44,7 @@
 			}
             var yespercent = $('#yes-percent').text();
               var nopercent = $('#no-percent').text();
-			  if (nopercent=="0,0%" && yespercent=="0,0%"){
+			  if ((nopercent=="0,0%" && yespercent=="0,0%") || ((nopercent=="0.0%" && yespercent=="0.0%"))){
 			  	$('#no-percent').text("0%");
 				$('#cons').css("width", "50%");
 			  	$('#yes-percent').text("0%");
@@ -52,7 +55,7 @@
 				  $('#pros').css("width", yespercent);
 		  		}
               var homogeneitepercent = $('#homogeneite-percent').text();
-			  if (homogeneitepercent=="0,0%"){
+			  if ((homogeneitepercent=="0,0%")||(homogeneitepercent=="0.0%")){
 			  	$('#homogeneite-percent').text("0%");
 			  }
 		  

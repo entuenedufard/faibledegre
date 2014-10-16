@@ -1,9 +1,10 @@
 {% load staticfiles %}
+{% load i18n %}
 <!DOCTYPE html>
 
   <head>
     <meta charset="utf-8">
-	<title>UN FAIBLE DEGRÉ D'ORIGINALITÉ</title>
+	<title>{% trans "UN FAIBLE DEGRÉ D'ORIGINALITÉ" %}</title>
 	<link href="{% static 'sondage/css/reset.css' %}" rel="stylesheet">
     <link href="{% static 'sondage/css/bootstrap.min.css' %}" rel="stylesheet">
 	<link href="{% static 'sondage/css/slider.css' %}" rel="stylesheet">
@@ -16,17 +17,17 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-xs-12">
-				{% if deactive %}	<div id='suspendus' class="alert alert-warning alert-dismissable"> <h1>(Attendez, les votes sont suspendus là en fait) </h1></div>
+				{% if deactive %}	<div id='suspendus' class="alert alert-warning alert-dismissable"> <h1>{% trans "(Attendez, les votes sont suspendus là en fait)"%} </h1></div>
 				{% endif %}
 			</div>
 		</div>
-		<form id="vote-form" class="std-form" action="/sondage/form/#" method="post">{% csrf_token %}
+		<form id="vote-form" class="std-form" action="#" method="post">{% csrf_token %}
 			<div class="row" id="wrap-ouinon">
 				<div class="col-xs-6">
-					<span id="label-left">NON</span>
+					<span id="label-left">{% trans "NON" %}</span>
 				</div>
 				<div class="col-xs-6">
-					<span id="label-right">OUI</span>
+					<span id="label-right">{% trans "OUI" %}</span>
 				</div>
 			</div>
 			<div class="row" id="wrap-percent">
@@ -48,7 +49,7 @@
 						<div class="checkbox" id="biased">
 							<label>
 								{{form.biased_question}}
-								La question est biaisée
+								{% trans "La question est biaisée" %}
 							</label>
 						</div>
 					</div>	
@@ -58,13 +59,13 @@
 						<div class="checkbox" id="pas-clair">
 							<label>
 								{{form.question_pas_claire}}
-								La question n'est pas claire
+								{% trans "La question n'est pas claire"%}
 							</label>
 						</div>
 						<div class="checkbox" id="manque-ressource">
 							<label>
 								{{form.ressources_insuffisantes}}
-								Il manque des données
+								{% trans "Il manque des données"%}
 							</label>
 						</div>
 					</div>	
@@ -74,7 +75,7 @@
 						<div class="checkbox" id="fed-up">
 							<label>
 								{{form.fed_up}}
-								Je pense qu'on devrait continuer dehors
+								{% trans "Je pense qu'on devrait continuer dehors" %}
 							</label>
 						</div>
 					</div>	

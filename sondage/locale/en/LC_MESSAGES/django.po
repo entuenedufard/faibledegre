@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-23 15:36+0200\n"
-"PO-Revision-Date: 2014-06-23 15:37+0200\n"
+"POT-Creation-Date: 2014-08-23 11:28+0200\n"
+"PO-Revision-Date: 2014-08-26 06:52+0200\n"
 "Last-Translator:   <entuenedufard@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,9 +18,50 @@ msgstr ""
 "Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
-#: templates/sondage/index.html:15
+#: templates/sondage/choiceNb.html:14 templates/sondage/form.html:7
+#: templates/sondage/index.html:15 templates/sondage/redir.html:6
 msgid "UN FAIBLE DEGRÉ D'ORIGINALITÉ"
 msgstr "A LOW DEGREE OF ORIGINALITY"
+
+#: templates/sondage/choiceNb.html:16
+msgid "VOUS SEREZ COMBIEN À RÉPONDRE SUR CET APPAREIL ?"
+msgstr "HOW MANY PEOPLE WILL BE USING THIS DEVICE?"
+
+#: templates/sondage/choiceNb.html:19
+msgid "UN"
+msgstr "ONE"
+
+#: templates/sondage/choiceNb.html:20
+msgid "DEUX"
+msgstr "TWO"
+
+#: templates/sondage/form.html:20
+msgid "(Attendez, les votes sont suspendus là en fait)"
+msgstr "(Wait, we're done voting for now)"
+
+#: templates/sondage/form.html:27 templates/sondage/resultats.html:16
+msgid "NON"
+msgstr "NO"
+
+#: templates/sondage/form.html:30 templates/sondage/resultats.html:19
+msgid "OUI"
+msgstr "YES"
+
+#: templates/sondage/form.html:52
+msgid "La question est biaisée"
+msgstr "Biased question"
+
+#: templates/sondage/form.html:62
+msgid "La question n'est pas claire"
+msgstr "Unclear question"
+
+#: templates/sondage/form.html:68
+msgid "Il manque des données"
+msgstr "Missing data"
+
+#: templates/sondage/form.html:78
+msgid "Je pense qu'on devrait continuer dehors"
+msgstr "I think we should carry on outside"
 
 #: templates/sondage/index.html:25
 msgid "VOILÀ, BRAVO, VOUS ÊTES CONNECTÉ/E"
@@ -37,3 +78,19 @@ msgstr ""
 #: templates/sondage/index.html:27
 msgid "D'accord"
 msgstr "OK"
+
+#: templates/sondage/resultats.html:22
+msgid "VALIDITÉ DE LA QUESTION :"
+msgstr "QUESTION LEGITIMACY :"
+
+#: templates/sondage/resultats.html:26
+msgid "VOTANTS"
+msgstr "VOTERS"
+
+#: templates/sondage/resultats.html:29
+msgid "HOMOGÉNÉITÉ :"
+msgstr "HOMOGENEITY :"
+
+#: templates/sondage/wait.html:10
+msgid "On a suspendu les votes pour l'instant merci"
+msgstr "We're done voting for the moment if you please"
