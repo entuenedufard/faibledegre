@@ -2,6 +2,8 @@
 
 #from math import fabs
 
+from socketio import socketio_manage
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.base import RedirectView
@@ -10,6 +12,8 @@ from django.core.urlresolvers import reverse
 from sondage.forms import ReponseForm
 
 from .models import Reponse, Statut
+
+from .sockets import SondageNamespace
 
 class SondageRedirectView(RedirectView):
     """c'est la vue qui redirige depuis la racine vers sondage/"""
