@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="UTF-8">
+<head>
+
+<title>yo</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script type="text/javascript">
+  var socket = io.connect("/sondage");//ici il se connecte au namespace sondage dans socketio (i.e. sockets.py)
+  socket.emit("coucou", "param1", 3);
+  socket.on("ouaisCoucou", function(param1){
+    alert("received : ouaisCoucou with param =" + param1);
+  });
+</script>
+</head>
+
+<body>
+
+   <h1>coucou</h1>
+
+</body>

@@ -2,7 +2,6 @@
 
 #from math import fabs
 
-from socketio import socketio_manage
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -13,12 +12,17 @@ from sondage.forms import ReponseForm
 
 from .models import Reponse, Statut
 
-from .sockets import SondageNamespace
+
 
 class SondageRedirectView(RedirectView):
     """c'est la vue qui redirige depuis la racine vers sondage/"""
     def get_redirect_url(self, *arg, **kwargs):
         return reverse("sondage:index")
+
+def test(request):
+    return render(request, 'sondage/test.html')
+
+
 
 def index(request):
     statut = Statut.objects.get(label="resultat").statut
@@ -48,21 +52,21 @@ def form(request, ouiNonSliderValue=50):
             form = ReponseForm(instance=instance, data=dataForm)
         except Reponse.DoesNotExist:
             form = ReponseForm(dataForm)
-            
+
         if not (statutResultat=="active"):
             deactive = True #on indique que c'est suspendu
             form = ReponseForm(data=dataForm)
             ouiNonSliderValue = 50
-            return render(request, 'sondage/form.html', locals()) 
+            return render(request, 'sondage/form.html', locals())
  #on compte les points
         else:
             instance = form.save(commit=False)
             instance.has_voted = hasVoted
             instance.adresse = remote_addr
             instance.save()
-            ouiNonSliderValue = instance.points  
+            ouiNonSliderValue = instance.points
     else: # Si ce n'est pas du POST, c'est probablement une requête GET
-            form = ReponseForm(data=dataForm)       
+            form = ReponseForm(data=dataForm)
     return render(request, 'sondage/form.html', locals())
 
 def resultats(request):
@@ -73,7 +77,7 @@ def resultats(request):
     else:
         device_connected = Reponse.objects.all()
         nb_connected = len(device_connected)
-        nb_votes = 0 
+        nb_votes = 0
         nb_voters = 0 # ie nb_votes*coef
         nb_suffrage_exprimes = 0 # ie votes that are not qualifying the question as invalid
         vote_list = list()
@@ -108,12 +112,12 @@ def resultats(request):
                     if not (r.question_pas_claire or r.ressources_insuffisantes) :
                         ecart_moyenne += (abs(r.points-ratio_oui))*r.coef
                 ratio_homogeneite = int(100-(round(2*ecart_moyenne/nb_suffrage_exprimes)))
-        
+
     return render(request, 'sondage/resultats.html', locals())
-     
+
 def redir(request):
     return render(request, 'sondage/redir.html')
-    
+
 def control(request):
     statutResultat = Statut.objects.get(label="resultat")
     ratio_fed_up = 0.0
@@ -138,7 +142,7 @@ def control(request):
     if nb_voters == 0:
        nb_voters = 1 #to avoid zero division
     ratio_fed_up = int(round(nb_fed_up/nb_voters*100))
-    
+
     for r in vote_list:
         if r.biased_question:
             total_biased += r.coef
@@ -151,8 +155,8 @@ def control(request):
     ratio_biased = int(round(total_biased/nb_votes*100))
     ratio_pas_clair = int(round(total_pas_clair/nb_votes*100))
     ratio_manque_ressource = int(round(total_manque_ressource/nb_votes*100))
-    
-    if request.method == 'POST':    
+
+    if request.method == 'POST':
         if request.POST.get('bouton') == "active":
             statutResultat.statut = "active"
         elif request.POST.get('bouton') == "RAZ":
@@ -161,9 +165,8 @@ def control(request):
             Reponse.objects.all().delete()
             statutResultat.statut = "BLACK"
         elif request.POST.get('bouton') == "BLACK":
-            Reponse.objects.all().update(has_voted=False)            
+            Reponse.objects.all().update(has_voted=False)
             statutResultat.statut = "BLACK"
         statutResultat.save()
     currentStatus=statutResultat.statut
     return render(request, 'sondage/control.html', locals())
-    

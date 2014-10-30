@@ -1,11 +1,16 @@
 #!/usr/bin/env python
+
 from gevent import monkey
+monkey.patch_all()
+
+import psycogreen.gevent
+psycogreen.gevent.patch_psycopg()
 from socketio.server import SocketIOServer
 import django.core.handlers.wsgi
 import os
 import sys
 
-monkey.patch_all()
+
 
 try:
     import faibledegre.settings as settings

@@ -6,6 +6,7 @@ from sondage import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
+    url(r'^test/$', views.test, name='test'),
     url(r'^nb/$', views.choiceNb, name='choiceNb'),
     url(r'^form/$', views.form, name='form'),
     url(r'^form/(?P<ouiNonSliderValue>\d+)$', views.form, name='form'),
